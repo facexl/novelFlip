@@ -59,7 +59,6 @@ const cal = ()=>{
 }
       
 onMounted(()=>{
-  const last = document.getElementById('last') as any
   const current = document.getElementById('current') as any
   const next = document.getElementById('next') as any
   next.scrollTo(0,667)
