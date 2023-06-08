@@ -44,7 +44,7 @@
 <script lang='ts' setup>
 import { text } from './text'
   
-const height = 600
+const height = 300
 
 const lineHeight = 25
 
@@ -162,9 +162,10 @@ onMounted(()=>{
           width:100%;
           padding:0 10px;
           overflow: hidden;
-        //   border:1px solid red;
+          border:1px solid red;
           margin-top:30px;
           transition: transform .3s ease-in-out;
+          background: inherit;
       }
       .last{
           background-color: gray;
@@ -186,7 +187,7 @@ onMounted(()=>{
       .pagenation{
         position: fixed;
         width:100%;
-        bottom:30px;
+        bottom:20px;
         left:0;
         text-align: center;
         font-size: 16px;

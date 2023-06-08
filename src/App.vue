@@ -1,9 +1,8 @@
 <template>
-  <page />
+  <router-view />
 </template>
 
 <script lang='ts' setup>
-import page from './page.vue'
 </script>
 
 <style>
