@@ -207,6 +207,7 @@ watch(()=>state.currentPage,(current,prev)=>{
 })
 
 const newPage = ()=>{
+  state.transition = 'transform .3s ease-in'
   if(direction === 'left'){
     doms.current!.style.transform = `translate3d(-100%,0,0)`
     state.currentPage++
@@ -223,7 +224,6 @@ const newPage = ()=>{
 const handleTouchEnd = ()=>{
   // 小于200毫秒就是快速翻页
   if(+new Date()-startTime<200){
-    state.transition = 'transform .3s ease-in'
     newPage()
     reset()
     return
@@ -251,8 +251,10 @@ const reset = ()=>{
   yDown = null;
   direction = ''
   lastNeedTransform = 0
-  doms.current && (doms.current.style.boxShadow = '')
-  doms.last && (doms.last.style.boxShadow = '')
+  setTimeout(()=>{
+    doms.current && (doms.current.style.boxShadow = '')
+    doms.last && (doms.last.style.boxShadow = '')
+  },300)
   startTime = 0
 }
         
