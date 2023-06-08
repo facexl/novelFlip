@@ -24,9 +24,9 @@
       </div>
     </div>
   </div>
-  <!-- <div class="pagenation">
+  <div class="pagenation">
     {{ state.currentPage===state.totalPage?'最后一页':state.currentPage }}
-  </div> -->
+  </div>
   <div
     v-if="state.showtotal"
     id="total"
