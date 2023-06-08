@@ -183,7 +183,7 @@ onMounted(()=>{
       .pagenation{
         position: fixed;
         width:100%;
-        bottom:0;
+        bottom:30px;
         left:0;
         text-align: center;
         font-size: 16px;
