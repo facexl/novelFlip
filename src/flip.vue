@@ -160,8 +160,14 @@ const handleTouchMove = (event:TouchEvent)=>{
       direction = 'left'
     }
   }
+  if(+new Date()-startTime<200){
+    console.log('时间太短不动')
+    return
+  }
+
   let needTransform = xDiff*100/width
   let dom;
+
 
   if(direction==='left'){
     if(state.currentPage===state.totalPage){
@@ -214,8 +220,8 @@ const newPage = ()=>{
 }
 
 const handleTouchEnd = ()=>{
-  // 小于300毫秒就是快速翻页
-  if(+new Date()-startTime<300){
+  // 小于200毫秒就是快速翻页
+  if(+new Date()-startTime<200){
     state.transition = 'transform .3s ease-in'
     newPage()
     reset()
