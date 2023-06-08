@@ -138,9 +138,9 @@ const handleTouchMove = (event:TouchEvent)=>{
       
 onMounted(()=>{
   calTotalPage()
-  nextTick(()=>{
+  setTimeout(()=>{
     init()
-  })
+  },50)
 })
       
 </script>
