@@ -54,13 +54,6 @@ const setLineHeight = ()=>{
   // 设置默认 line-height
   let lineHeight = 20;
   let max = 40
-  // 根据容器高度计算 line-height，使其能够整除
-  //   for (let i = Math.floor(state.height / 2); i > 0; i--) {
-  //     if (state.height % i / i < 0.2) {
-  //       lineHeight = i;
-  //       break;
-  //     }
-  //   }
   let result = 0;
   for(let i=lineHeight;i<max;i=i+0.5){
     if(state.height % i === 0){
