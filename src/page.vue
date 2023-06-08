@@ -144,9 +144,6 @@ onMounted(()=>{
 </script>
       
   <style lang='less' scoped>
-  *{
-      box-sizing: border-box;
-  }
   .app{
       position: relative;
       height:100vh;

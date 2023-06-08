@@ -12,6 +12,9 @@ html,body,#app{
     height:100vh;
     overflow: hidden;
 }
+*{
+      box-sizing: border-box;
+}
 .totalHeight{
     width:100%;
     height: 100%;
