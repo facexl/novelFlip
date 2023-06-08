@@ -162,14 +162,20 @@ const handleTouchMove = (event:TouchEvent)=>{
   let dom;
 
   if(direction==='left'){
-    if(state.currentPage===state.totalPage)return
+    if(state.currentPage===state.totalPage){
+      reset()
+      return
+    }
     if(needTransform>=0){
       needTransform = 0
     }
     dom = doms.current
     dom!.style.transform = `translateX(${needTransform}%)`
   }else{
-    if(state.currentPage===1)return
+    if(state.currentPage===1){
+      reset()
+      return
+    }
     let fixedTransform = -100+needTransform
     if(fixedTransform>=0){
       fixedTransform = 0
