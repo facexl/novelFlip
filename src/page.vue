@@ -6,7 +6,7 @@
   >
     <div
       v-for="(item,i) in state.pages"
-      :key="item"
+      :key="i"
       class="item"
       :style="{
         transform:item.transform,
@@ -110,12 +110,12 @@ let xDown:number|null = null;
 let yDown:number|null = null;
 let dis = 3
 
-const handleTouchStart = (event)=>{
+const handleTouchStart = (event:TouchEvent)=>{
   const firstTouch = event.touches[0];
   xDown = firstTouch.clientX;
   yDown = firstTouch.clientY;
 }
-const handleTouchMove = (event)=>{
+const handleTouchMove = (event:TouchEvent)=>{
   if (!xDown || !yDown) {
     return;
   }
