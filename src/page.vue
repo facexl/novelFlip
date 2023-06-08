@@ -10,8 +10,8 @@
       class="item"
       :style="{
         transform:item.transform,
-        height:height+'px',
-        lineHeight:lineHeight+'px'
+        height:state.height+'px',
+        lineHeight:state.lineHeight+'px'
       }"
     >
       <div
@@ -33,7 +33,7 @@
     ref="total"
     class="item"
     :style="{
-      lineHeight:lineHeight+'px',
+      lineHeight:state.lineHeight+'px',
       opacity:0
     }"
   >
@@ -44,9 +44,44 @@
 <script lang='ts' setup>
 import { text } from './text2'
   
-const height = 875
-
-const lineHeight = 25
+const setLineHeight = ()=>{
+  // 获取设备高度
+  const deviceHeight = window.innerHeight || document.documentElement.clientHeight;
+  // 容器高度 
+  state.height = deviceHeight - 50
+  // 转换成偶数
+  state.height = state.height % 2 === 0 ? state.height:(state.height+1)
+  // 设置默认 line-height
+  let lineHeight = 20;
+  let max = 40
+  // 根据容器高度计算 line-height，使其能够整除
+  //   for (let i = Math.floor(state.height / 2); i > 0; i--) {
+  //     if (state.height % i / i < 0.2) {
+  //       lineHeight = i;
+  //       break;
+  //     }
+  //   }
+  let result = 0;
+  for(let i=lineHeight;i<max;i=i+0.5){
+    if(state.height % i === 0){
+      result = i;
+      break
+    }
+  }
+  if(!result){
+    for(let i=lineHeight;i<max;i=i+0.5){
+      if(state.height % i /i <0.2){
+        result = i;
+        break
+      }
+    }
+  }
+  // 返过来计算容器高度
+  state.height = result * Math.ceil(state.height/result)
+  // 对 line-height 进行四舍五入，保留两位小数
+  state.lineHeight = result
+  console.log('设备高度:',deviceHeight,'容器高度',state.height,'计算出的合适的line-height',state.lineHeight)
+}
 
 const total = ref()
 
@@ -54,16 +89,20 @@ const state = reactive<{
     showtotal:boolean,
     totalPage:number,
     currentPage:number,
+    lineHeight:number,
+    height:number,
     pages:{
       transform:string,
       innerHeight:string,
       text:string
     }[]
 }>({
-  showtotal:true,
+  showtotal:false,
   totalPage:0,
   currentPage:1,
-  pages:[]
+  pages:[],
+  lineHeight:0,
+  height:0
 })
   
 // state.currentPage 1 2
@@ -89,11 +128,11 @@ const last = ()=>{
 
 const calTotalPage = ()=>{
   const totalHeight = total.value.offsetHeight
-  state.totalPage = +Math.ceil(totalHeight/height).toFixed(0)
+  state.totalPage = +Math.ceil(totalHeight/state.height).toFixed(0)
   state.pages = new Array(state.totalPage).fill(0).map((_,i)=>{
     return {
       transform:`translateX(${100*i}%)`,
-      innerHeight:height*state.totalPage+'px',
+      innerHeight:state.height*state.totalPage+'px',
       text:i===0?text:''
     }
   })
@@ -102,7 +141,7 @@ const calTotalPage = ()=>{
 
 const init = ()=>{
   [...document.querySelectorAll('.item')].forEach((el,i)=>{
-    el.scrollTo(0,height*i)
+    el.scrollTo(0,state.height*i)
   })
 }
 
@@ -137,6 +176,8 @@ const handleTouchMove = (event:TouchEvent)=>{
 }
       
 onMounted(()=>{
+  setLineHeight()
+  state.showtotal = true
   setTimeout(()=>{
     calTotalPage()
     setTimeout(()=>{
@@ -166,6 +207,7 @@ onMounted(()=>{
         //   margin-top:30px;
           transition: transform .3s ease-in-out;
           background: inherit;
+          font-size: 20px;
       }
       .last{
           background-color: gray;
