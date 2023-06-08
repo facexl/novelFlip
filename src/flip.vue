@@ -222,8 +222,8 @@ const newPage = ()=>{
 }
 
 const handleTouchEnd = ()=>{
-  // 小于200毫秒就是快速翻页
-  if(+new Date()-startTime<200){
+  // 小于100毫秒就是快速翻页
+  if(+new Date()-startTime<100){
     newPage()
     reset()
     return
