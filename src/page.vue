@@ -1,67 +1,144 @@
 <template>
   <div
-    class="app"
-    @click="cal"
+    class="app totalHeight"
+    @touchstart="handleTouchStart"
+    @touchmove="handleTouchMove"
   >
     <div
-      id="last"
-      class="item last"
+      v-for="(item,i) in state.pages"
+      :key="item"
+      class="item"
+      :style="{
+        transform:item.transform,
+        height:height+'px',
+        lineHeight:lineHeight+'px'
+      }"
     >
       <div
         class="page"
         :style="{
-          height:height*3+'px'
+          height:item.innerHeight
         }"
       >
-        <b>1</b>{{ text }}
+        {{ item.text }}
       </div>
     </div>
-    <div
-      id="current"
-      class="item current"
-    >
-      <div
-        class="page"
-        :style="{
-          height:height*3+'px'
-        }"
-      >
-        <b>1</b>{{ text }}
-      </div>
-    </div>
-    <div
-      id="next"
-      class="item next"
-    >
-      <div
-        class="page"
-        :style="{
-          height:height*3+'px'
-        }"
-      >
-        <b>1</b>{{ text }}
-      </div>
-    </div>
+  </div>
+  <div
+    v-if="state.showtotal"
+    id="total"
+    ref="total"
+    class="item"
+    :style="{
+      lineHeight:lineHeight+'px',
+      opacity:0
+    }"
+  >
+    {{ text }}
   </div>
 </template>
       
 <script lang='ts' setup>
-const text = new Array(1000).fill('开冲').map((it,i)=>i+it).join()
+import { text } from './text'
   
-const currentPage = ref(1)
+let currentPage = 1
   
-const height = window.innerHeight
-  
+const height = 600
 
-const cal = ()=>{
-  document.getElementById('current')!.style.transform = 'translateX(-100%)';
-  document.getElementById('next')!.style.transform = 'translateX(0)'
+const lineHeight = 25
+
+const total = ref()
+
+const state = reactive<{
+    showtotal:boolean,
+    totalPage:number,
+    pages:{
+      transform:string,
+      innerHeight:string,
+      text:string
+    }[]
+}>({
+  showtotal:true,
+  totalPage:0,
+  pages:[]
+})
+  
+// currentPage 1 2
+// i 0 0+1-2
+// trans 0 -100
+
+const next = ()=>{
+  if(currentPage===state.totalPage)return
+  currentPage++
+  state.pages.forEach((it,i)=>{
+    it.transform = `translateX(${100*(i+1-currentPage)}%)`;
+    it.text = i >= currentPage-2 && i<=currentPage+2 ? text : ''
+  })
+}
+const last = ()=>{
+  if(currentPage===1)return
+  currentPage--
+  state.pages.forEach((it,i)=>{
+    it.transform = `translateX(${100*(i+1-currentPage)}%)`;
+    it.text = i >= currentPage-2 && i<=currentPage+2 ? text : ''
+  })
+}
+
+const calTotalPage = ()=>{
+  const totalHeight = total.value.offsetHeight
+  state.totalPage = +Math.ceil(totalHeight/height).toFixed(0)
+  state.pages = new Array(state.totalPage).fill(0).map((_,i)=>{
+    return {
+      transform:`translateX(${100*i}%)`,
+      innerHeight:height*state.totalPage+'px',
+      text:i===0?text:''
+    }
+  })
+  state.showtotal = false
+}
+
+const init = ()=>{
+  [...document.querySelectorAll('.item')].forEach((el,i)=>{
+    el.scrollTo(0,height*i)
+  })
+}
+
+let xDown:number|null = null;
+let yDown:number|null = null;
+let dis = 5
+
+const handleTouchStart = (event)=>{
+  console.log('trigger',123)
+  const firstTouch = event.touches[0];
+  xDown = firstTouch.clientX;
+  yDown = firstTouch.clientY;
+}
+const handleTouchMove = (event)=>{
+  if (!xDown || !yDown) {
+    return;
+  }
+  const xDiff = event.touches[0].clientX - xDown;
+  const yDiff = event.touches[0].clientY - yDown;
+  console.log(xDiff,yDiff)
+  if (Math.abs(xDiff) > Math.abs(yDiff)) {
+    if (xDiff > dis) {
+      console.log("右滑");
+      last()
+    } else if (xDiff < -dis) {
+      console.log("左滑");
+      next()
+    }
+  }
+
+  xDown = null;
+  yDown = null;
 }
       
 onMounted(()=>{
-  const current = document.getElementById('current') as any
-  const next = document.getElementById('next') as any
-  next.scrollTo(0,667)
+  calTotalPage()
+  nextTick(()=>{
+    init()
+  })
 })
       
 </script>
@@ -69,21 +146,23 @@ onMounted(()=>{
   <style lang='less' scoped>
   *{
       box-sizing: border-box;
-      transition: all .3s;
   }
   .app{
+      position: relative;
       height:100vh;
       overflow: hidden;
+      background-color: #efddb8;
   }
       .item{
-            position: absolute;
-            left: 0;
-            top:0;
+          position: absolute;
+          left: 0;
+          top:0;
           width:100%;
-          height:100vh;
+          padding:0 10px;
           overflow: hidden;
-          line-height: 18px;
-          background-color: #efddb8;
+        //   border:1px solid red;
+          margin-top:30px;
+          transition: transform .3s ease-in-out;
       }
       .last{
           background-color: gray;
@@ -98,17 +177,8 @@ onMounted(()=>{
       }
       .page{
           overflow: hidden;
-      }
-      .page1{
-          border:1px solid red;
-          // height:667px;
-      }
-      .page2{
-          border:1px solid blue;
-          // height:1334px;
-      }
-      .page3{
-          border:1px solid green;
-          // height:2001px;
+          white-space: pre-wrap;
+    word-break: break-all;
+    word-spacing: normal;
       }
    </style>
