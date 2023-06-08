@@ -18,7 +18,8 @@
         :style="{
           zIndex:item.zindex,
           height:height+'px',
-          lineHeight:lineHeight+'px'
+          lineHeight:lineHeight+'px',
+          transition:state.transition
         }"
       >
         <div
@@ -77,12 +78,14 @@ const state = reactive<{
         innerHeight:string,
         text:string,
         zindex:number
-      }[]
+      }[],
+      transition:string
   }>({
     showtotal:true,
     totalPage:0,
     currentPage:1,
-    pages:[]
+    pages:[],
+    transition:''
   })
     
 // state.currentPage 1 2
@@ -205,18 +208,24 @@ const newPage = ()=>{
     doms.last && (doms.last!.style.transform = '')
     state.currentPage--
   }
+  setTimeout(()=>{
+    state.transition = 'transform .1s'
+  },50)
 }
 
 const handleTouchEnd = ()=>{
   // 小于300毫秒就是快速翻页
   if(+new Date()-startTime<300){
+    state.transition = 'transform .3s ease-in'
     newPage()
     reset()
     return
   }
+  // 非快速翻页
+  state.transition = 'transform .1s'
   console.log(lastNeedTransform,direction,123)
   if(direction){
-    if(Math.abs(lastNeedTransform)>=50){
+    if(Math.abs(lastNeedTransform)>=40){
       newPage()
     }else{
       if(direction === 'left'){
@@ -272,9 +281,9 @@ onMounted(()=>{
             width:100%;
             padding:0 10px;
             overflow: hidden;
-            border:1px solid red;
+            // border:1px solid red;
             // margin-top:30px;
-            transition: transform .1s;
+            // transition: transform .1s;
             backface-visibility: hidden; /* 可以避免一些闪屏或者重影问题 */
             // box-shadow: 5px 0 3px rgba(0, 0, 0, 0.3);
             background-color: #efddb8;
