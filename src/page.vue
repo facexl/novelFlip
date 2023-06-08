@@ -24,6 +24,9 @@
       </div>
     </div>
   </div>
+  <div class="pagenation">
+    {{ state.currentPage===state.totalPage?'最后一页':state.currentPage }}
+  </div>
   <div
     v-if="state.showtotal"
     id="total"
@@ -41,8 +44,6 @@
 <script lang='ts' setup>
 import { text } from './text'
   
-let currentPage = 1
-  
 const height = 600
 
 const lineHeight = 25
@@ -52,6 +53,7 @@ const total = ref()
 const state = reactive<{
     showtotal:boolean,
     totalPage:number,
+    currentPage:number,
     pages:{
       transform:string,
       innerHeight:string,
@@ -60,27 +62,28 @@ const state = reactive<{
 }>({
   showtotal:true,
   totalPage:0,
+  currentPage:1,
   pages:[]
 })
   
-// currentPage 1 2
+// state.currentPage 1 2
 // i 0 0+1-2
 // trans 0 -100
 
 const next = ()=>{
-  if(currentPage===state.totalPage)return
-  currentPage++
+  if(state.currentPage===state.totalPage)return
+  state.currentPage++
   state.pages.forEach((it,i)=>{
-    it.transform = `translateX(${100*(i+1-currentPage)}%)`;
-    it.text = i >= currentPage-2 && i<=currentPage+2 ? text : ''
+    it.transform = `translateX(${100*(i+1-state.currentPage)}%)`;
+    it.text = i >= state.currentPage-2 && i<=state.currentPage+2 ? text : ''
   })
 }
 const last = ()=>{
-  if(currentPage===1)return
-  currentPage--
+  if(state.currentPage===1)return
+  state.currentPage--
   state.pages.forEach((it,i)=>{
-    it.transform = `translateX(${100*(i+1-currentPage)}%)`;
-    it.text = i >= currentPage-2 && i<=currentPage+2 ? text : ''
+    it.transform = `translateX(${100*(i+1-state.currentPage)}%)`;
+    it.text = i >= state.currentPage-2 && i<=state.currentPage+2 ? text : ''
   })
 }
 
@@ -105,10 +108,9 @@ const init = ()=>{
 
 let xDown:number|null = null;
 let yDown:number|null = null;
-let dis = 5
+let dis = 3
 
 const handleTouchStart = (event)=>{
-  console.log('trigger',123)
   const firstTouch = event.touches[0];
   xDown = firstTouch.clientX;
   yDown = firstTouch.clientY;
@@ -177,5 +179,14 @@ onMounted(()=>{
           white-space: pre-wrap;
     word-break: break-all;
     word-spacing: normal;
+      }
+      .pagenation{
+        position: fixed;
+        width:100%;
+        bottom:0;
+        left:0;
+        text-align: center;
+        font-size: 16px;
+        z-index:666;
       }
    </style>
