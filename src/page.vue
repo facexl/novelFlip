@@ -44,7 +44,7 @@
 <script lang='ts' setup>
 import { text } from './text2'
   
-const height = 600
+const height = 875
 
 const lineHeight = 25
 
