@@ -160,13 +160,10 @@ const handleTouchMove = (event:TouchEvent)=>{
       direction = 'left'
     }
   }
-  if(+new Date()-startTime<200){
-    console.log('时间太短不动')
-    return
-  }
 
   let needTransform = xDiff*100/width
   let dom;
+  let res = ''
 
 
   if(direction==='left'){
@@ -178,7 +175,7 @@ const handleTouchMove = (event:TouchEvent)=>{
       needTransform = 0
     }
     dom = doms.current
-    dom!.style.transform = `translate3d(${needTransform}%,0,0)`
+    res = `translate3d(${needTransform}%,0,0)`
   }else{
     if(state.currentPage===1){
       reset()
@@ -189,12 +186,16 @@ const handleTouchMove = (event:TouchEvent)=>{
       fixedTransform = 0
     }
     dom = doms.last
-    dom!.style.transform = `translate3d(${fixedTransform}%,0,0)`
+    res = `translate3d(${fixedTransform}%,0,0)`
+  }
+  // console.log('时间太短不动')
+  if(+new Date()-startTime>100){
+    dom!.style.transform = res
+    dom!.style.boxShadow = '5px 0 3px rgba(0, 0, 0, 0.3)'
   }
 
-  dom!.style.boxShadow = '5px 0 3px rgba(0, 0, 0, 0.3)'
-
   lastNeedTransform = needTransform
+  
 }
 
 watch(()=>state.currentPage,(current,prev)=>{
