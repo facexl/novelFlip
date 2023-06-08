@@ -24,9 +24,9 @@
       </div>
     </div>
   </div>
-  <div class="pagenation">
+  <!-- <div class="pagenation">
     {{ state.currentPage===state.totalPage?'最后一页':state.currentPage }}
-  </div>
+  </div> -->
   <div
     v-if="state.showtotal"
     id="total"
@@ -42,7 +42,7 @@
 </template>
       
 <script lang='ts' setup>
-import { text } from './text'
+import { text } from './text2'
   
 const height = 600
 
@@ -163,7 +163,7 @@ onMounted(()=>{
           padding:0 10px;
           overflow: hidden;
           border:1px solid red;
-          margin-top:30px;
+        //   margin-top:30px;
           transition: transform .3s ease-in-out;
           background: inherit;
       }
@@ -178,12 +178,13 @@ onMounted(()=>{
           background-color:yellowgreen;
           transform: translateX(100%);
       }
-      .page{
+      .page,#total{
           overflow: hidden;
           white-space: pre-wrap;
-    word-break: break-all;
-    word-spacing: normal;
+            word-break: break-all;
+            word-spacing: normal;
       }
+      
       .pagenation{
         position: fixed;
         width:100%;

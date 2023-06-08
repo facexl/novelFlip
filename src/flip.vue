@@ -299,7 +299,7 @@ onMounted(()=>{
             transform-style: preserve-3d;
             backface-visibility: hidden; /* 可以避免一些闪屏或者重影问题 */
         }
-        .page{
+        .page,#total{
             overflow: hidden;
             white-space: pre-wrap;
             word-break: break-all;
