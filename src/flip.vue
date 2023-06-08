@@ -121,7 +121,6 @@ let yDown:number|null = null;
 let dis = 2;
 let direction:'left'|'right'|'' = ''
 let lastNeedTransform:number = 0
-let fastTouch:boolean = false 
 let startTime:number = 0
   
 const handleTouchStart = (event:TouchEvent)=>{
@@ -170,7 +169,7 @@ const handleTouchMove = (event:TouchEvent)=>{
       needTransform = 0
     }
     dom = doms.current
-    dom!.style.transform = `translateX(${needTransform}%)`
+    dom!.style.transform = `translate3d(${needTransform}%,0,0)`
   }else{
     if(state.currentPage===1){
       reset()
@@ -181,7 +180,7 @@ const handleTouchMove = (event:TouchEvent)=>{
       fixedTransform = 0
     }
     dom = doms.last
-    dom!.style.transform = `translateX(${fixedTransform}%)`
+    dom!.style.transform = `translate3d(${fixedTransform}%,0,0)`
   }
 
   dom!.style.boxShadow = '5px 0 3px rgba(0, 0, 0, 0.3)'
@@ -199,7 +198,7 @@ watch(()=>state.currentPage,(current,prev)=>{
 
 const newPage = ()=>{
   if(direction === 'left'){
-    doms.current!.style.transform = `translateX(-100%)`
+    doms.current!.style.transform = `translate3d(-100%,0,0)`
     state.currentPage++
   }
   if(direction === 'right'){
@@ -224,7 +223,7 @@ const handleTouchEnd = ()=>{
         doms.current!.style.transform = ''
       }
       if(direction === 'right'){
-        doms.last && (doms.last!.style.transform = `translateX(-100%)`)
+        doms.last && (doms.last!.style.transform = `translate3d(-100%,0,0)`)
       }
     }
   }
@@ -258,8 +257,6 @@ onMounted(()=>{
         height:100vh;
         overflow: hidden;
         background-color: #efddb8;
-        transform-style: preserve-3d;
-        backface-visibility: hidden; /* 可以避免一些闪屏或者重影问题 */
         perspective: 800px; /* 设置视角距离 */
     }
     .itembox{
@@ -278,10 +275,11 @@ onMounted(()=>{
             border:1px solid red;
             // margin-top:30px;
             transition: transform .1s;
-            transform-style: preserve-3d;
             backface-visibility: hidden; /* 可以避免一些闪屏或者重影问题 */
             // box-shadow: 5px 0 3px rgba(0, 0, 0, 0.3);
             background-color: #efddb8;
+            transform-style: preserve-3d;
+            backface-visibility: hidden; /* 可以避免一些闪屏或者重影问题 */
         }
         .page{
             overflow: hidden;
