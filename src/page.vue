@@ -71,7 +71,6 @@ const setLineHeight = ()=>{
   }
   // 返过来计算容器高度
   state.height = result * Math.ceil(state.height/result)
-  // 对 line-height 进行四舍五入，保留两位小数
   state.lineHeight = result
   console.log('设备高度:',deviceHeight,'容器高度',state.height,'计算出的合适的line-height',state.lineHeight)
 }
