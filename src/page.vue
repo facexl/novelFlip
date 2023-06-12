@@ -50,10 +50,10 @@ const setLineHeight = ()=>{
   // 容器高度 
   state.height = deviceHeight - 50
   // 转换成偶数
-  state.height = state.height % 2 === 0 ? state.height:(state.height+1)
+  state.height = state.height % 2 === 0 ? state.height:(state.height-1)
   // 设置默认 line-height
-  let lineHeight = 20;
-  let max = 40
+  let lineHeight = 30;
+  let max = 60
   let result = 0;
   for(let i=lineHeight;i<max;i=i+0.5){
     if(state.height % i === 0){
